@@ -1,7 +1,7 @@
-package book.Mapper;
+package spotify.Mapper;
 
-import book.Dto.RegisterRequest;
-import book.Entity.Person;
+import spotify.Dto.RegisterRequest;
+import spotify.Entity.Person;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

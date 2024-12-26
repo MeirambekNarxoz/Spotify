@@ -1,9 +1,9 @@
-package book.Controller;
+package spotify.Controller;
 
-import book.Dto.AuthenticationRequest;
-import book.Dto.BookDto;
-import book.Dto.RegisterRequest;
-import book.Service.PersonService;
+import spotify.Dto.AuthenticationRequest;
+import spotify.Dto.BookDto;
+import spotify.Dto.RegisterRequest;
+import spotify.Service.PersonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

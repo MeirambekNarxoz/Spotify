@@ -1,10 +1,10 @@
 package Service;
 
-import book.Dto.BookDto;
-import book.Entity.Book;
-import book.Mapper.BookMapper;
-import book.Repository.BookRepository;
-import book.Service.BookService;
+import spotify.Dto.BookDto;
+import spotify.Entity.Book;
+import spotify.Mapper.BookMapper;
+import spotify.Repository.BookRepository;
+import spotify.Service.BookService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

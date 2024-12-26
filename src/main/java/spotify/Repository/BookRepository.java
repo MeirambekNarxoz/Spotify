@@ -1,6 +1,6 @@
-package book.Repository;
+package spotify.Repository;
 
-import book.Entity.Book;
+import spotify.Entity.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

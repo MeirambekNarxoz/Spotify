@@ -1,4 +1,4 @@
-package book.Dto;
+package spotify.Dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

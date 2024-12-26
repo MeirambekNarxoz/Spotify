@@ -1,7 +1,7 @@
-package book.Mapper;
+package spotify.Mapper;
 
-import book.Dto.BookDto;
-import book.Entity.Book;
+import spotify.Dto.BookDto;
+import spotify.Entity.Book;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

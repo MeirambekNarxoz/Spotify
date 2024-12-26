@@ -1,4 +1,4 @@
-package book.Entity;
+package spotify.Entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -1,9 +1,9 @@
-package book.Service;
+package spotify.Service;
 
-import book.Dto.BookDto;
-import book.Entity.Book;
-import book.Mapper.BookMapper;
-import book.Repository.BookRepository;
+import spotify.Dto.BookDto;
+import spotify.Entity.Book;
+import spotify.Mapper.BookMapper;
+import spotify.Repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

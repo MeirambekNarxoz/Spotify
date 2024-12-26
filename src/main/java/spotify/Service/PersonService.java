@@ -1,12 +1,12 @@
-package book.Service;
+package spotify.Service;
 
-import book.Dto.AuthenticationRequest;
-import book.Dto.RegisterRequest;
-import book.Entity.Person;
-import book.Entity.Role_Person;
-import book.Mapper.PersonMapper;
-import book.Repository.PersonRepository;
-import book.Repository.RoleRepository;
+import spotify.Dto.AuthenticationRequest;
+import spotify.Dto.RegisterRequest;
+import spotify.Entity.Person;
+import spotify.Entity.Role_Person;
+import spotify.Mapper.PersonMapper;
+import spotify.Repository.PersonRepository;
+import spotify.Repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

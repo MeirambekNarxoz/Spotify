@@ -1,6 +1,6 @@
-package book.Repository;
+package spotify.Repository;
 
-import book.Entity.Person;
+import spotify.Entity.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PersonRepository extends JpaRepository<Person, Long> {

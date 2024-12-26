@@ -1,7 +1,7 @@
-package book.Controller;
+package spotify.Controller;
 
-import book.Dto.BookDto;
-import book.Service.BookService;
+import spotify.Dto.BookDto;
+import spotify.Service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
