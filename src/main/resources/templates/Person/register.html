@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<<<<<<< HEAD
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -47,6 +46,18 @@
       color: white;
       margin-top: 5px;
     }
+    .login-link {
+      text-align: center;
+      margin-top: 20px;
+      color: white;
+    }
+    .login-link a {
+      color: #1DB954;
+      text-decoration: none;
+    }
+    .login-link a:hover {
+      color: #1ed760;
+    }
   </style>
 </head>
 <body>
@@ -86,6 +97,10 @@
   </form>
 
   <p id="responseMessage" class="response-message"></p>
+
+  <div class="login-link">
+    <p>Already have an account? <a href="http://localhost:8080/person/login">Login here</a></p>
+  </div>
 </div>
 
 <!-- Bootstrap JS and dependencies -->
@@ -112,10 +127,6 @@
       document.getElementById('responseMessage').innerText = 'Password must be at least 6 characters long and contain one lowercase letter, one uppercase letter, and one number.';
       return;
     }
-    window.onload = function() {
-      // Clear localStorage when the page loads
-      localStorage.clear();
-    };
 
     const data = {
       name,
@@ -126,72 +137,22 @@
     };
 
     fetch('http://localhost:8080/person/register', {
-=======
-<html>
-<head>
-  <title>Register and Login</title>
-</head>
-<body>
-
-<h1>Login</h1>
-<form id="loginForm">
-  <label for="email">Email:</label>
-  <input type="email" id="loginEmail" name="email" required><br>
-
-  <label for="password">Password:</label>
-  <input type="password" id="loginPassword" name="password" required><br>
-
-  <button type="button" onclick="loginUser()">Login</button>
-</form>
-
-<p id="responseMessage"></p>
-
-<script>
-  // Function to login the user
-  function loginUser() {
-    const data = {
-      email: document.getElementById('loginEmail').value,
-      password: document.getElementById('loginPassword').value,
-    };
-
-    fetch('http://localhost:8080/person/login', {
->>>>>>> fdfe75ad840965dd995b0d09e87941ac6cdb1fd8
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     })
-<<<<<<< HEAD
-            .then(response => {
-              if (response.ok) {
-                window.location.href = 'http://localhost:8080/person/login';
-              } else {
-                return response.text().then(message => {
-                  throw new Error(message);
-                });
-              }
-            })
-            .then(() => {
-              document.getElementById('responseMessage').innerText = 'Registration successful, redirecting to login...';
-            })
-            .catch(error => {
-              document.getElementById('responseMessage').innerText = error.message;
-=======
-            .then(response => response.json()) // Expecting JSON response with the token
+            .then(response => response.json())
             .then(data => {
               if (data.token) {
-                // Save the token in localStorage or sessionStorage
-                localStorage.setItem('authToken', data.token); // Store JWT token
-                // Redirect to the main page or dashboard
-                window.location.href = "http://localhost:8080/person/mainPage";  // Replace with actual URL
+                // If registration is successful, redirect to login page
+                window.location.href = 'http://localhost:8080/person/login?registered=true';
               } else {
-                // Display error if token is not received
-                document.getElementById('responseMessage').innerText = 'Login failed. Please check your credentials.';
+                document.getElementById('responseMessage').innerText = 'Registration failed. Please try again.';
               }
             })
             .catch(error => {
               console.error('Error:', error);
-              document.getElementById('responseMessage').innerText = 'An error occurred during login.';
->>>>>>> fdfe75ad840965dd995b0d09e87941ac6cdb1fd8
+              document.getElementById('responseMessage').innerText = 'An error occurred during registration.';
             });
   }
 </script>

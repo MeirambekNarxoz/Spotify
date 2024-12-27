@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update User</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #121212;
+            color: white;
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            max-width: 800px;
+            margin-top: 50px;
+        }
+        h1 {
+            text-align: center;
+            color: #1DB954;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-control {
+            background-color: #181818;
+            color: white;
+            border: 1px solid #444;
+        }
+        .form-control:focus {
+            border-color: #1DB954;
+            background-color: #181818;
+            color: white;
+        }
+        .btn-submit {
+            background-color: #1DB954;
+            color: white;
+            font-size: 16px;
+            width: 100%;
+        }
+        .btn-submit:hover {
+            background-color: #1ed760;
+        }
+        .footer {
+            text-align: center;
+            color: #bbb;
+            margin-top: 40px;
+        }
+        .alert {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Update User Information</h1>
+
+    <!-- Success/Failure Alert -->
+    <div id="alertMessage" class="alert" style="display: none;"></div>
+    <form id="updateForm" method="post">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" class="form-control" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" class="form-control" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" class="form-control" name="phone">
+        </div>
+        <div class="form-group">
+            <label for="address">Address</label>
+            <textarea id="address" class="form-control" name="address" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+
+<script>
+    // Ensure the user is authenticated before allowing access to the form
+    const token = localStorage.getItem('authToken');
+
+    if (!token) {
+        window.location.href = 'http://localhost:8080/person/login';
+    }
+
+    const decodedToken = jwt_decode(token);
+    const userId = decodedToken.Id; // Assume user ID is stored in the token
+    console.log('User ID:', userId);
+
+    // Fetch user data from server and populate form
+    window.onload = function() {
+        fetch(`http://localhost:8080/person/${userId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch user data');
+                }
+                return response.json();
+            })
+            .then(user => {
+                // Populate form fields with user data
+                document.getElementById('name').value = user.name || '';
+                document.getElementById('email').value = user.email || '';
+                document.getElementById('phone').value = user.phone || '';  // Ensure that 'phone' is the correct key
+                document.getElementById('address').value = user.address || '';
+            })
+            .catch(error => {
+                console.error('Error fetching user data:', error);
+                displayAlert('An error occurred while fetching user data.', 'danger');
+            });
+    };
+
+    // Handle form submission using AJAX
+    document.getElementById('updateForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form from submitting normally
+
+        // Get form values
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone').value;
+        const address = document.getElementById('address').value;
+
+        // Create data object for updating the user
+        const data = {
+            name,
+            email,
+            phone,
+            address
+        };
+
+        // Send PUT request with AJAX to update user information
+        fetch(`http://localhost:8080/person/update/${userId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Failed to update user');
+                }
+            })
+            .then(data => {
+                displayAlert('User updated successfully!', 'success');
+            })
+            .catch(error => {
+                displayAlert('An error occurred. Please try again.', 'danger');
+            });
+    });
+
+    // Function to display alerts (success or failure)
+    function displayAlert(message, type) {
+        const alertMessage = document.getElementById('alertMessage');
+        alertMessage.textContent = message;
+        alertMessage.className = `alert alert-${type}`;
+        alertMessage.style.display = 'block';
+    }
+</script>
+
+</body>
+</html>

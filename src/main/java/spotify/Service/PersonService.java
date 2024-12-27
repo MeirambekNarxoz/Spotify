@@ -63,6 +63,7 @@ public class PersonService {
     private static final SecretKey SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
     private String generateToken(UserDetails userDetails) {
+
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
                 .claim("authorities", userDetails.getAuthorities().stream()

@@ -2,21 +2,166 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spotify</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script> <!-- Include jwt-decode library -->
+    <style>
+        body {
+            background-color: #121212;
+            color: white;
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            max-width: 800px;
+            margin-top: 50px;
+        }
+        h1 {
+            text-align: center;
+            color: #1DB954; /* Spotify green */
+        }
+        .btn-custom {
+            background-color: #1DB954;
+            color: white;
+            border: none;
+        }
+        .btn-custom:hover {
+            background-color: #1ed760;
+        }
+        .btn-logout {
+            background-color: #ff4d4d;
+            color: white;
+        }
+        .btn-logout:hover {
+            background-color: #ff6666;
+        }
+        .btn-group {
+            width: 100%;
+        }
+        .song-list {
+            margin-top: 30px;
+        }
+        .song-item {
+            background-color: #1e1e1e;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+        table {
+            width: 100%;
+            color: white;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #555;
+        }
+        th {
+            background-color: #333;
+        }
+        td {
+            background-color: #1e1e1e;
+        }
+    </style>
 </head>
 <body>
-<h1>Hello</h1>
+
+<div class="container text-center">
+    <h1>Welcome to Spotify</h1>
+    <!-- Logout button -->
+    <button class="btn btn-logout w-100 mb-3" onclick="logoutUser()">Logout</button>
+
+    <div class="btn-group-vertical w-100 mb-4">
+        <button class="btn btn-custom mb-2" onclick="window.location.href='http://localhost:8080/songs/new'">Add New Song</button>
+        <button class="btn btn-custom mb-2" onclick="window.location.href='http://localhost:8080/playlist'">Go to Playlist</button>
+        <button class="btn btn-custom mb-2" onclick="window.location.href='http://localhost:8080/albums'">View Albums</button>
+        <button class="btn btn-custom mb-2" onclick="window.location.href='http://localhost:8080/songs'">Music Library</button>
+    </div>
+
+    <!-- Song List Section -->
+    <h2>Список Песен</h2>
+    <table id="songTable">
+        <thead>
+        <tr>
+            <th>Название</th>
+            <th>Исполнитель</th>
+            <th>Аудио</th>
+            <th>Обложка</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody id="songList"></tbody>
+    </table>
+</div>
+
 <script>
+    // Check if token exists in localStorage
     const token = localStorage.getItem('authToken');
-    fetch('http://localhost:8080/protected-endpoint', {
-        method: 'GET',
-        headers: { 'Authorization': `Bearer ${token}` },
-    });
+
+    // If no token, redirect to login page
+    if (!token) {
+        window.location.href = 'http://localhost:8080/person/login';
+    } else {
+        // Decode the token
+        const decodedToken = jwt_decode(token);
+
+        // Get the user role from the token
+        const userRole = decodedToken.authorities;
+
+        // Check if the role is ADMIN, then redirect accordingly
+        if (userRole === 'ADMIN') {
+            window.location.href = 'http://localhost:8080/person/AdminPage';
+        } else {
+            window.location.href = 'http://localhost:8080/person/mainPage';
+        }
+    }
+
+    // Fetch and display the music list
+    function loadMusicList() {
+        fetch('http://localhost:8080/songs')
+            .then(response => response.json())
+            .then(songs => {
+                const songListContainer = document.getElementById('songList');
+                songListContainer.innerHTML = ''; // Clear any previous songs
+
+                // Loop through the songs and display them
+                songs.forEach(song => {
+                    const songRow = document.createElement('tr');
+                    songRow.innerHTML = `
+                        <td>${song.title}</td>
+                        <td>${song.artist}</td>
+                        <td>
+                            <audio controls>
+                                <source src="/audio/${song.id}" type="audio/mpeg">
+                                Ваш браузер не поддерживает аудиоплеер.
+                            </audio>
+                        </td>
+                        <td><img src="/cover/${song.id}" alt="Обложка альбома" style="width: 100px; height: auto;" /></td>
+                        <td>
+                            <a href="/songs/${song.id}">Просмотреть</a>
+                            <a href="/songs/delete/${song.id}">Удалить</a>
+                        </td>
+                    `;
+                    songListContainer.appendChild(songRow);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching songs:', error);
+                document.getElementById('songList').innerHTML = '<tr><td colspan="5">Failed to load songs. Please try again later.</td></tr>';
+            });
+    }
+
+    // Call the function to load music list when page loads
+    window.onload = loadMusicList;
+
+    // Logout function
     function logoutUser() {
         localStorage.removeItem('authToken');
         window.location.href = "http://localhost:8080/person/login";
     }
-
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -75,7 +75,7 @@ public class SongController {
 
 
 
-        return "redirect:/songs"; // Перенаправление после успешного сохранения
+        return "redirect:/person/mainPage"; // Перенаправление после успешного сохранения
     }
 
 

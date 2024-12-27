@@ -25,7 +25,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/songs/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/person/mainPage").permitAll()
-                        .requestMatchers("/songs/**").hasRole("ADMIN")
+                        .requestMatchers("/songs/**").permitAll()
                         .requestMatchers("/person/login", "/person/register").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/person/**").permitAll()
                         .requestMatchers("/person/**").permitAll()

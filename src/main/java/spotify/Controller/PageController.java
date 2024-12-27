@@ -1,6 +1,5 @@
 package spotify.Controller;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -9,12 +8,12 @@ public class PageController {
 
     @GetMapping("/person/login")
     public String loginPage() {
-        return "login";
+        return "Person/login";
     }
 
     @GetMapping("person/register")
     public String registerPage() {
-        return "register";
+        return "Person/register";
     }
 
     @GetMapping("/person/mainPage")
@@ -25,5 +24,10 @@ public class PageController {
     @GetMapping("/person/AdminPage")
     public String AdminPage() {
         return "admin";
+    }
+
+    @GetMapping("/person/updatePerson")
+    public String UpdatePersonPage() {
+        return "Person/updatePerson";
     }
 }
