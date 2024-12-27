@@ -1,22 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Register and Login</title>
 </head>
 <body>
+
 <h1>Login</h1>
-<form action="/process-login" method="post">
+<form id="loginForm">
     <label for="email">Email:</label>
-    <input type="text" id="email" name="username" required>
-    <br>
+    <input type="email" id="loginEmail" name="email" required><br>
+
     <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required>
-    <br>
-    <button type="submit">Login</button>
+    <input type="password" id="loginPassword" name="password" required><br>
+
+    <button type="button" onclick="loginUser()">Login</button>
 </form>
-<div>
-    <a href="/person/register">Register</a>
-</div>
+
+<p id="responseMessage"></p>
+
+<script>
+    // Функция для авторизации пользователя
+    function loginUser() {
+        const data = {
+            email: document.getElementById('loginEmail').value,
+            password: document.getElementById('loginPassword').value,
+        };
+
+        fetch('http://localhost:8080/person/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        })
+            .then(response => {
+                if (response.ok) {
+                    // Если ответ успешен, перенаправляем на MainPage
+                    window.location.href = "http://localhost:8080/person/mainPage";  // Замените на правильный путь вашей главной страницы
+                } else {
+                    return response.text();
+                }
+            })
+            .then(message => {
+                // Если ошибка, отображаем сообщение
+                if (message) {
+                    document.getElementById('responseMessage').innerText = message;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
+
 </body>
 </html>

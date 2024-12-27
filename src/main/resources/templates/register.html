@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Register and Login</title>
+</head>
+<body>
+
+<h1>Login</h1>
+<form id="loginForm">
+  <label for="email">Email:</label>
+  <input type="email" id="loginEmail" name="email" required><br>
+
+  <label for="password">Password:</label>
+  <input type="password" id="loginPassword" name="password" required><br>
+
+  <button type="button" onclick="loginUser()">Login</button>
+</form>
+
+<p id="responseMessage"></p>
+
+<script>
+  // Function to login the user
+  function loginUser() {
+    const data = {
+      email: document.getElementById('loginEmail').value,
+      password: document.getElementById('loginPassword').value,
+    };
+
+    fetch('http://localhost:8080/person/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+            .then(response => response.json()) // Expecting JSON response with the token
+            .then(data => {
+              if (data.token) {
+                // Save the token in localStorage or sessionStorage
+                localStorage.setItem('authToken', data.token); // Store JWT token
+                // Redirect to the main page or dashboard
+                window.location.href = "http://localhost:8080/person/mainPage";  // Replace with actual URL
+              } else {
+                // Display error if token is not received
+                document.getElementById('responseMessage').innerText = 'Login failed. Please check your credentials.';
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              document.getElementById('responseMessage').innerText = 'An error occurred during login.';
+            });
+  }
+</script>
+
+</body>
+</html>

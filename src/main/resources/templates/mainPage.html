@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Spotify</title>
+</head>
+<body>
+<h1>Hello</h1>
+<script>
+    const token = localStorage.getItem('authToken');
+    fetch('http://localhost:8080/protected-endpoint', {
+        method: 'GET',
+        headers: { 'Authorization': `Bearer ${token}` },
+    });
+    function logoutUser() {
+        localStorage.removeItem('authToken');
+        window.location.href = "http://localhost:8080/person/login";
+    }
+
+</script>
+</body>
+</html>
