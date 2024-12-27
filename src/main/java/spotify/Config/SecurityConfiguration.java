@@ -1,5 +1,6 @@
 package spotify.Config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,32 +21,29 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-//                .formLogin(form -> form
-//                        .loginProcessingUrl("/login")
-//                        .permitAll())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/songs/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/check-session/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/person/mainPage").permitAll()
                         .requestMatchers("/songs/**").hasRole("ADMIN")
                         .requestMatchers("/person/login", "/person/register").permitAll()
-                        .requestMatchers(HttpMethod.PUT,"/person/**").authenticated()
-                        .requestMatchers("/person/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/person/**").permitAll()
+                        .requestMatchers("/person/**").permitAll()
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/person/login")
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
-                        .deleteCookies("JSESSIONID"));
+                        .deleteCookies("JSESSIONID")
+                );
         return http.build();
     }
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder =

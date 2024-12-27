@@ -54,7 +54,7 @@ public class PersonService {
         session.setAttribute("authToken", token);
         session.setMaxInactiveInterval(60 * 60);
 
-        return "Login successful. Token: " + token;
+        return token;
     }
 
 

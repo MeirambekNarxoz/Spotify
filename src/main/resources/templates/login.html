@@ -20,6 +20,7 @@
 
 <script>
     // Функция для авторизации пользователя
+    // Функция для авторизации пользователя
     function loginUser() {
         const data = {
             email: document.getElementById('loginEmail').value,
@@ -33,19 +34,24 @@
         })
             .then(response => {
                 if (response.ok) {
-                    // Если ответ успешен, перенаправляем на MainPage
-                    window.location.href = "http://localhost:8080/person/mainPage";  // Замените на правильный путь вашей главной страницы
+                    return response.text(); // Считываем текстовый ответ
                 } else {
-                    return response.text();
+                    return response.text().then(message => {
+                        throw new Error(message); // Выводим ошибку в случае неудачи
+                    });
                 }
             })
-            .then(message => {
-                // Если ошибка, отображаем сообщение
-                if (message) {
-                    document.getElementById('responseMessage').innerText = message;
-                }
+            .then(token => {
+                // Сохраняем токен в Local Storage
+                localStorage.setItem('authToken', token);
+                console.log('Token saved:', token);
+
+                // Перенаправляем на главную страницу
+                window.location.href = "http://localhost:8080/person/mainPage";
             })
             .catch(error => {
+                // Отображаем сообщение об ошибке
+                document.getElementById('responseMessage').innerText = error.message;
                 console.error('Error:', error);
             });
     }

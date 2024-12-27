@@ -16,6 +16,7 @@ public class PageController {
     public String registerPage() {
         return "register";
     }
+
     @GetMapping("/person/mainPage")
     public String MainPage() {
         return "mainPage";
