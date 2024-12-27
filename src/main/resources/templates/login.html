@@ -1,30 +1,108 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Register and Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #121212;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 500px;
+            margin-top: 50px;
+            padding: 30px;
+            background-color: #1e1e1e;
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+            color: #1DB954;
+        }
+        .form-control {
+            background-color: #333;
+            border: 1px solid #444;
+            color: white;
+        }
+        .btn-primary {
+            background-color: #1DB954;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #1ed760;
+        }
+        .response-message {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 16px;
+            color: #ff4d4d;
+        }
+        .success-message {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 16px;
+            color: #4CAF50; /* Green color for success message */
+        }
+    </style>
 </head>
 <body>
 
-<h1>Login</h1>
-<form id="loginForm">
-    <label for="email">Email:</label>
-    <input type="email" id="loginEmail" name="email" required><br>
+<div class="container">
+    <h1>Login</h1>
 
-    <label for="password">Password:</label>
-    <input type="password" id="loginPassword" name="password" required><br>
+    <!-- Display Success Message If Registration Was Successful -->
+    <div id="successMessage" class="success-message" style="display: none;">
+        Registration successful! You can now log in.
+    </div>
 
-    <button type="button" onclick="loginUser()">Login</button>
-</form>
+    <form id="loginForm">
+        <div class="mb-3">
+            <label for="loginEmail" class="form-label">Email</label>
+            <input type="email" class="form-control" id="loginEmail" name="email" required>
+        </div>
 
-<p id="responseMessage"></p>
+        <div class="mb-3">
+            <label for="loginPassword" class="form-label">Password</label>
+            <input type="password" class="form-control" id="loginPassword" name="password" required>
+        </div>
+
+        <button type="button" class="btn btn-primary w-100" onclick="loginUser()">Login</button>
+    </form>
+
+    <p id="responseMessage" class="response-message"></p>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 
 <script>
-    // Функция для авторизации пользователя
-    // Функция для авторизации пользователя
+    // Check if the URL contains the 'registered' query parameter
+    window.onload = function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('registered')) {
+            document.getElementById('successMessage').style.display = 'block';
+        }
+        localStorage.clear();
+    };
+
     function loginUser() {
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+
+        // Validate input fields
+        if (!email || !password) {
+            document.getElementById('responseMessage').innerText = 'Both fields are required!';
+            return;
+        }
+
         const data = {
-            email: document.getElementById('loginEmail').value,
-            password: document.getElementById('loginPassword').value,
+            email,
+            password
         };
 
         fetch('http://localhost:8080/person/login', {
@@ -34,25 +112,19 @@
         })
             .then(response => {
                 if (response.ok) {
-                    return response.text(); // Считываем текстовый ответ
+                    return response.text(); // Receive token
                 } else {
                     return response.text().then(message => {
-                        throw new Error(message); // Выводим ошибку в случае неудачи
+                        throw new Error('Invalid email or password!');
                     });
                 }
             })
             .then(token => {
-                // Сохраняем токен в Local Storage
                 localStorage.setItem('authToken', token);
-                console.log('Token saved:', token);
-
-                // Перенаправляем на главную страницу
-                window.location.href = "http://localhost:8080/person/mainPage";
+                window.location.href = 'http://localhost:8080/person/mainPage';
             })
             .catch(error => {
-                // Отображаем сообщение об ошибке
                 document.getElementById('responseMessage').innerText = error.message;
-                console.error('Error:', error);
             });
     }
 </script>
