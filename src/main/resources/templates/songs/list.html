@@ -10,11 +10,21 @@
     <tr>
         <th>Название</th>
         <th>Исполнитель</th>
-        <th>Действия</th>
+        <th>Аудио</th>
+        <th>Обложка</th>
     </tr>
     <tr th:each="song : ${songs}">
         <td th:text="${song.title}"></td>
         <td th:text="${song.artist}"></td>
+        <td>
+            <audio controls>
+                <source th:src="@{'/audio/' + ${song.id}}" type="audio/mpeg"> <!-- URL для аудиофайла -->
+                Ваш браузер не поддерживает аудиоплеер.
+            </audio>
+        </td>
+        <td>
+            <img th:src="@{'/cover/' + ${song.id}}" alt="Обложка альбома" style="width: 100px; height: auto;"/>
+        </td>
         <td>
             <a th:href="@{/songs/{id}(id=${song.id})}">Просмотреть</a>
             <a th:href="@{/songs/delete/{id}(id=${song.id})}">Удалить</a>

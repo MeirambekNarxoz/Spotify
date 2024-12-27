@@ -1,10 +1,16 @@
 package spotify.Controller;
 
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import spotify.Entity.Album;
 import spotify.Entity.Song;
 import spotify.Service.AlbumService;
 import spotify.Service.SongService;
@@ -14,12 +20,14 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/songs")
+@RequiredArgsConstructor
 public class SongController {
-    @Autowired
-    private SongService songService;
 
-    @Autowired
-    private AlbumService albumService; // Для доступа к альбомам при создании песни
+    private final SongService songService;
+    private final AlbumService albumService; // Для доступа к альбомам при создании песни
+    private final Logger logger = LoggerFactory.getLogger(SongController.class);
+
+
 
     @GetMapping
     public String getAllSongs(Model model) {
@@ -41,20 +49,36 @@ public class SongController {
         model.addAttribute("albums", albumService.findAll()); // передаем альбомы для выбора
         return "songs/new"; // путь к вашему шаблону
     }
-
-    @PostMapping
-    public String createSong(@ModelAttribute Song song,
+    @PostMapping("/create")
+    public String createSong(@Valid @RequestParam("title") String title,
+                             @RequestParam("artist") String artist,
                              @RequestParam("audioFile") MultipartFile audioFile,
-                             @RequestParam("coverImage") MultipartFile coverImage) throws IOException {
-        if (!audioFile.isEmpty()) {
-            song.setAudioData(audioFile.getBytes()); // Устанавливаем аудиоданные
+                             @RequestParam(value = "coverImage", required = false) MultipartFile coverImage,
+                             @RequestParam(value = "albumId", required = false) Long albumId,
+                             Model model) throws IOException {
+
+        logger.info("Title: " + title);
+        logger.info("Artist: " + artist);
+        logger.info("Audio file size: " + (audioFile.isEmpty() ? "No file uploaded" : audioFile.getSize() + " bytes"));
+        logger.info("Cover image size: " + (coverImage.isEmpty() ? "No file uploaded" : coverImage.getSize() + " bytes"));
+
+        byte [] audioPath = audioFile.getBytes();
+        byte [] coverpath = coverImage.getBytes();
+
+
+        // Сохранение песни в базе данных
+        Song songSaved = songService.save(title, artist, audioPath, coverpath, albumId);
+
+        // Проверка на ошибки
+        if ( songSaved.getId() == null) {
+            return "songs/new"; // Возврат на форму с ошибками
         }
-        if (!coverImage.isEmpty()) {
-            song.setCoverImage(coverImage.getBytes()); // Устанавливаем изображение обложки
-        }
-        songService.save(song);
-        return "redirect:/songs"; // перенаправление после создания
+
+
+
+        return "redirect:/songs"; // Перенаправление после успешного сохранения
     }
+
 
     @GetMapping("/delete/{id}")
     public String deleteSong(@PathVariable Long id) {

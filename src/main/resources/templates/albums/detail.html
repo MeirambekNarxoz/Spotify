@@ -4,8 +4,37 @@
     <title>Детали Альбома</title>
 </head>
 <body>
+<a href="/albums">Назад</a>
 <h1 th:text="${album.title}"></h1>
 <img th:src="@{'data:image/jpeg;base64,' + ${album.coverImage}}" alt="Обложка" />
-<a href="/albums">Назад</a>
+
+<table>
+    <tr>
+        <th>Название</th>
+        <th>Исполнитель</th>
+        <th>Аудио</th>
+        <th>Обложка</th>
+    </tr>
+    <tr th:each="song : ${songs}">
+        <td th:text="${song.title}"></td>
+        <td th:text="${song.artist}"></td>
+        <td>
+            <audio controls>
+                <source th:src="@{'/audio/' + ${song.id}}" type="audio/mpeg"> <!-- URL для аудиофайла -->
+                Ваш браузер не поддерживает аудиоплеер.
+            </audio>
+        </td>
+        <td>
+            <img th:src="@{'/cover/' + ${song.id}}" alt="Обложка альбома" style="width: 100px; height: auto;"/>
+        </td>
+        <td>
+            <a th:href="@{/songs/{id}(id=${song.id})}">Просмотреть</a>
+<!--            <a th:href="@{/albums/{albumId}/delete/{songId}(albumId=${album.album_id}, songId=${song.id})}">Удалить</a>-->
+
+        </td>
+    </tr>
+</table>
+
+
 </body>
 </html>

@@ -16,11 +16,12 @@ public class Song {
     private String title; // Название песни
     private String artist; // Исполнитель
 
-    @Column(name = "audioData", columnDefinition = "BYTEA")
+//    @Column(name = "audioData", columnDefinition = "BYTEA")
+
     private byte[] audioData; // Аудиоданные
 
 
-    @Column(name = "cover_image_music", columnDefinition = "BYTEA")
+//    @Column(name = "cover_image_music", columnDefinition = "BYTEA")
     private byte[] coverImage; // Обложка альбома
 
     @ManyToOne

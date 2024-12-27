@@ -9,13 +9,19 @@
 <table>
     <tr>
         <th>Название</th>
+        <th>Обложка</th>
+        <th>Песни</th>
         <th>Действия</th>
     </tr>
     <tr th:each="album : ${albums}">
         <td th:text="${album.title}"></td>
         <td>
-            <a th:href="@{/albums/{id}(id=${album.id})}">Просмотреть</a>
-            <a th:href="@{/albums/delete/{id}(id=${album.id})}">Удалить</a>
+            <img th:src="@{'/cover/' + ${album.album_id}}" alt="Обложка альбома" style="width: 100px; height: auto;"/>
+        </td>
+        <td th:text="${#lists.size(album.songs)}">0</td> <!-- Отображаем количество песен в альбоме -->
+        <td>
+            <a th:href="@{/albums/{id}(id=${album.album_id})}">Просмотреть</a>
+            <a th:href="@{/albums/delete/{delete_album_id}(delete_album_id=${album.album_id})}">Удалить</a>
         </td>
     </tr>
 </table>

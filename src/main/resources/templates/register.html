@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #121212;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      max-width: 500px;
+      margin-top: 50px;
+      padding: 30px;
+      background-color: #1e1e1e;
+      border-radius: 8px;
+    }
+    h1 {
+      text-align: center;
+      color: #1DB954;
+    }
+    .form-control {
+      background-color: #333;
+      border: 1px solid #444;
+      color: white;
+    }
+    .btn-primary {
+      background-color: #1DB954;
+      border: none;
+    }
+    .btn-primary:hover {
+      background-color: #1ed760;
+    }
+    .response-message {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 16px;
+      color: #ff4d4d;
+    }
+    .password-hint {
+      font-size: 10px;
+      color: white;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Registration</h1>
+  <form id="registerForm">
+    <div class="mb-3">
+      <label for="registerName" class="form-label">Name</label>
+      <input type="text" class="form-control" id="registerName" name="name" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="registerEmail" class="form-label">Email</label>
+      <input type="email" class="form-control" id="registerEmail" name="email" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="registerPassword" class="form-label">Password</label>
+      <input type="password" class="form-control" id="registerPassword" name="password" required>
+      <small class="password-hint">
+        Password must be at least 6 characters long, contain at least one lowercase letter, one uppercase letter, and one number.
+      </small>
+    </div>
+
+    <div class="mb-3">
+      <label for="registerPhone" class="form-label">Phone</label>
+      <input type="text" class="form-control" id="registerPhone" name="phone">
+    </div>
+
+    <div class="mb-3">
+      <label for="registerAddress" class="form-label">Address</label>
+      <input type="text" class="form-control" id="registerAddress" name="address">
+    </div>
+
+    <button type="button" class="btn btn-primary w-100" onclick="registerUser()">Register</button>
+  </form>
+
+  <p id="responseMessage" class="response-message"></p>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+<script>
+  function registerUser() {
+    const name = document.getElementById('registerName').value;
+    const email = document.getElementById('registerEmail').value;
+    const password = document.getElementById('registerPassword').value;
+    const phone = document.getElementById('registerPhone').value;
+    const address = document.getElementById('registerAddress').value;
+
+    // Validate input fields
+    if (!name || !email || !password) {
+      document.getElementById('responseMessage').innerText = 'All fields must be filled!';
+      return;
+    }
+
+    // Password validation
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
+    if (!passwordRegex.test(password)) {
+      document.getElementById('responseMessage').innerText = 'Password must be at least 6 characters long and contain one lowercase letter, one uppercase letter, and one number.';
+      return;
+    }
+    window.onload = function() {
+      // Clear localStorage when the page loads
+      localStorage.clear();
+    };
+
+    const data = {
+      name,
+      email,
+      password,
+      phone,
+      address
+    };
+
+    fetch('http://localhost:8080/person/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+            .then(response => {
+              if (response.ok) {
+                window.location.href = 'http://localhost:8080/person/login';
+              } else {
+                return response.text().then(message => {
+                  throw new Error(message);
+                });
+              }
+            })
+            .then(() => {
+              document.getElementById('responseMessage').innerText = 'Registration successful, redirecting to login...';
+            })
+            .catch(error => {
+              document.getElementById('responseMessage').innerText = error.message;
+            });
+  }
+</script>
+
+</body>
+</html>

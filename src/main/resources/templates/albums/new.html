@@ -1,19 +1,27 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Добавить новый Альбом</title>
+  <meta charset="UTF-8">
+  <title>Создать альбом</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<h1>Добавить новый Альбом</h1>
-<form th:action="@{/albums}" th:object="${album}" method="post">
-  <label>Название:</label>
-  <input type="text" th:field="*{title}" required/>
-  <br/>
-  <label>Обложка (base64):</label>
-  <input type="text" th:field="*{coverImage}" />
-  <br/>
-  <button type="submit">Сохранить</button>
-</form>
-<a href="/albums">Назад</a>
+<div class="container mt-5">
+  <h2>Создать новый альбом</h2>
+  <form th:action="@{/albums/create}" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+      <label for="title">Название:</label>
+      <input type="text" id="title" name="title" class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label for="coverImage">Обложка:</label>
+      <input type="file" id="coverImage" name="coverPic" class="form-control-file" accept="image/*" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Создать альбом</button>
+  </form>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

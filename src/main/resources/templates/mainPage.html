@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main Page</title>
+</head>
+<body>
+<h1 id="greeting">Welcome to the Main Page</h1>
+<p id="roleInfo"></p>
+
+<script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+<script>
+    function checkAuthorization() {
+        const token = localStorage.getItem('authToken');
+
+        if (!token) {
+            // Если токен отсутствует, перенаправляем на страницу логина
+            window.location.href = 'http://localhost:8080/login'; // замените на правильный путь
+            return;
+        }
+
+        try {
+            // Расшифровываем токен
+            const decodedToken = jwt_decode(token);
+            console.log('Decoded Token:', decodedToken);
+
+            // Получаем роль из токена
+            const role = decodedToken.authorities; // предполагаем, что роль хранится в поле "authorities"
+
+            if (!role) {
+                document.getElementById('roleInfo').innerText = 'Role not found in token.';
+                return;
+            }
+
+            // Отображаем роль на странице
+            document.getElementById('roleInfo').innerText = `Your role is: ${role}`;
+
+            // Логика в зависимости от роли
+            if (role === 'admin') {
+                alert('Welcome, Admin! You have full access.');
+            } else if (role === 'user') {
+                alert('Welcome, User! You have limited access.');
+            } else {
+                alert('Unknown role. Please contact support.');
+            }
+
+        } catch (error) {
+            console.error('Invalid token:', error);
+            document.getElementById('roleInfo').innerText = 'Invalid token. Please log in again.';
+        }
+    }
+
+    // Вызываем функцию при загрузке страницы
+    checkAuthorization();
+</script>
+
+</body>
+</html>

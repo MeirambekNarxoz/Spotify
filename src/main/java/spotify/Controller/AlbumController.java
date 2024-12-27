@@ -1,19 +1,26 @@
 package spotify.Controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import spotify.Entity.Album;
+import spotify.Entity.Song;
 import spotify.Service.AlbumService;
+import spotify.Service.SongService;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
 @RequestMapping("/albums")
+@RequiredArgsConstructor
 public class AlbumController {
-    @Autowired
-    private AlbumService albumService;
+
+    private final AlbumService albumService;
+    private final SongService songService;
 
     @GetMapping
     public String getAllAlbums(Model model) {
@@ -26,6 +33,7 @@ public class AlbumController {
     public String getAlbumById(@PathVariable Long id, Model model) {
         Album album = albumService.findById(id);
         model.addAttribute("album", album);
+        model.addAttribute("songs", album.getSongs());
         return "albums/detail"; // путь к вашему шаблону
     }
 
@@ -35,15 +43,26 @@ public class AlbumController {
         return "albums/new"; // путь к вашему шаблону
     }
 
-    @PostMapping
-    public String createAlbum(@ModelAttribute Album album) {
-        albumService.save(album);
-        return "redirect:/albums"; // перенаправление после создания
+
+
+
+    @PostMapping("/create")
+    public String createAlbum(@RequestParam String title,
+                              @RequestParam(value = "coverPic") MultipartFile coverImage)
+            throws IOException {
+
+        byte[] coverPath = coverImage.getBytes();
+
+        albumService.save(title, coverPath); // Передаем 'title' вместо 'name'
+        return "redirect:/albums"; // Перенаправление после создания
     }
+
 
     @GetMapping("/delete/{id}")
     public String deleteAlbum(@PathVariable Long id) {
         albumService.delete(id);
         return "redirect:/albums"; // перенаправление после удаления
     }
+
+
 }

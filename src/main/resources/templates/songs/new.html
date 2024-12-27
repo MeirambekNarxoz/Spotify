@@ -1,30 +1,39 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Добавить новую Песню</title>
+    <meta charset="UTF-8">
+    <title>Создать песню</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<h1>Добавить новую Песню</h1>
-<form th:action="@{/songs}" th:object="${song}" method="post" enctype="multipart/form-data">
-    <label>Название:</label>
-    <input type="text" th:field="*{title}" required/>
-    <br/>
-    <label>Исполнитель:</label>
-    <input type="text" th:field="*{artist}" required/>
-    <br/>
-    <label>Аудиофайл:</label>
-    <input type="file" name="audioFile" required/>
-    <br/>
-    <label>Обложка:</label>
-    <input type="file" name="coverImage"/>
-    <br/>
-    <label>Альбом:</label>
-    <select th:field="*{album.id}">
-        <option th:each="album : ${albums}" th:value="${album.id}" th:text="${album.title}"></option>
-    </select>
-    <br/>
-    <button type="submit">Сохранить</button>
-</form>
-<a href="/songs">Назад</a>
+<div class="container mt-5">
+    <h2>Создать новую песню</h2>
+    <form th:action="@{/songs/create}" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="title">Название:</label>
+            <input type="text" id="title" name="title" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="artist">Исполнитель:</label>
+            <input type="text" id="artist" name="artist" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="audioFile">Аудиофайл:</label>
+            <input type="file" id="audioFile" name="audioFile" class="form-control-file" accept="audio/*" required>
+        </div>
+        <div class="form-group">
+            <label for="coverImage">Обложка (необязательно):</label>
+            <input type="file" id="coverImage" name="coverImage" class="form-control-file" accept="image/*">
+        </div>
+        <label>Альбом:</label>
+        <select name="albumId" >
+            <option th:each="album : ${albums}" th:value="${album.album_id}" th:text="${album.title}"></option>
+        </select>
+        <button type="submit" class="btn btn-primary">Создать песню</button>
+    </form>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
