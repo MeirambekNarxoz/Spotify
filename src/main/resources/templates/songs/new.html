@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Добавить новую Песню</title>
+</head>
+<body>
+<h1>Добавить новую Песню</h1>
+<form th:action="@{/songs}" th:object="${song}" method="post" enctype="multipart/form-data">
+    <label>Название:</label>
+    <input type="text" th:field="*{title}" required/>
+    <br/>
+    <label>Исполнитель:</label>
+    <input type="text" th:field="*{artist}" required/>
+    <br/>
+    <label>Аудиофайл:</label>
+    <input type="file" name="audioFile" required/>
+    <br/>
+    <label>Обложка:</label>
+    <input type="file" name="coverImage"/>
+    <br/>
+    <label>Альбом:</label>
+    <select th:field="*{album.id}">
+        <option th:each="album : ${albums}" th:value="${album.id}" th:text="${album.title}"></option>
+    </select>
+    <br/>
+    <button type="submit">Сохранить</button>
+</form>
+<a href="/songs">Назад</a>
+</body>
+</html>

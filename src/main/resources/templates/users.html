@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Users</title>
+</head>
+<body>
+<h1>Users</h1>
+<form action="/users/add" method="post">
+    <input type="text" name="username" placeholder="Username" required>
+    <input type="password" name="password" placeholder="Password" required>
+    <button type="submit">Add User</button>
+</form>
+
+<ul>
+    <li th:each="user : ${users}">
+        <span th:text="${user.username}">Username</span>
+    </li>
+</ul>
+</body>
+</html>

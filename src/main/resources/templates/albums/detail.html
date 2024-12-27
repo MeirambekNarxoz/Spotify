@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Детали Альбома</title>
+</head>
+<body>
+<h1 th:text="${album.title}"></h1>
+<img th:src="@{'data:image/jpeg;base64,' + ${album.coverImage}}" alt="Обложка" />
+<a href="/albums">Назад</a>
+</body>
+</html>

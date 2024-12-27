@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Добавить новый Альбом</title>
+</head>
+<body>
+<h1>Добавить новый Альбом</h1>
+<form th:action="@{/albums}" th:object="${album}" method="post">
+  <label>Название:</label>
+  <input type="text" th:field="*{title}" required/>
+  <br/>
+  <label>Обложка (base64):</label>
+  <input type="text" th:field="*{coverImage}" />
+  <br/>
+  <button type="submit">Сохранить</button>
+</form>
+<a href="/albums">Назад</a>
+</body>
+</html>

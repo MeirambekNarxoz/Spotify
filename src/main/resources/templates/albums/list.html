@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Список Альбомов</title>
+</head>
+<body>
+<h1>Список Альбомов</h1>
+<a th:href="@{/albums/new}">Добавить новый альбом</a>
+<table>
+    <tr>
+        <th>Название</th>
+        <th>Действия</th>
+    </tr>
+    <tr th:each="album : ${albums}">
+        <td th:text="${album.title}"></td>
+        <td>
+            <a th:href="@{/albums/{id}(id=${album.id})}">Просмотреть</a>
+            <a th:href="@{/albums/delete/{id}(id=${album.id})}">Удалить</a>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

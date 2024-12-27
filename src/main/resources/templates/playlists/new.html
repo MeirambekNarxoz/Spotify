@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Добавить новый Плейлист</title>
+</head>
+<body>
+<h1>Добавить новый Плейлист</h1>
+<form th:action="@{/playlists}" th:object="${playlist}" method="post">
+    <label>Название:</label>
+    <input type="text" th:field="*{name}" required/>
+    <br/>
+    <button type="submit">Сохранить</button>
+</form>
+<a href="/playlists">Назад</a>
+</body>
+</html>

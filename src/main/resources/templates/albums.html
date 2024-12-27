@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Albums</title>
+</head>
+<body>
+<h1>Albums</h1>
+<form action="/albums/add" method="post" enctype="multipart/form-data">
+    <input type="text" name="title" placeholder="Album Title" required>
+    <input type="file" name="coverImage" accept="image/*">
+    <button type="submit">Add Album</button>
+</form>
+
+<ul>
+    <li th:each="album : ${albums}">
+        <img th:src="'data:image/jpeg;base64,' + ${#strings.bytes(album.coverImage)}" alt="Cover" width="100" />
+        <span th:text="${album.title}">Album Title</span>
+    </li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Список Песен</title>
+</head>
+<body>
+<h1>Список Песен</h1>
+<a th:href="@{/songs/new}">Добавить новую песню</a>
+<table>
+    <tr>
+        <th>Название</th>
+        <th>Исполнитель</th>
+        <th>Действия</th>
+    </tr>
+    <tr th:each="song : ${songs}">
+        <td th:text="${song.title}"></td>
+        <td th:text="${song.artist}"></td>
+        <td>
+            <a th:href="@{/songs/{id}(id=${song.id})}">Просмотреть</a>
+            <a th:href="@{/songs/delete/{id}(id=${song.id})}">Удалить</a>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

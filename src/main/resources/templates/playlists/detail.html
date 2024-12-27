@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Детали Плейлиста</title>
+</head>
+<body>
+<h1 th:text="${playlist.name}"></h1>
+<h2>Песни:</h2>
+<ul>
+  <li th:each="song : ${playlist.songs}" th:text="${song.title}"></li>
+</ul>
+<a href="/playlists">Назад</a>
+</body>
+</html>

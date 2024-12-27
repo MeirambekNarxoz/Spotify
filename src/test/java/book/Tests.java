@@ -1,8 +1,5 @@
 package book;
 
-import spotify.Dto.BookDto;
-import spotify.Entity.Book;
-import spotify.Mapper.BookMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
