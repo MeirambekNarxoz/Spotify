@@ -1,12 +1,10 @@
 package spotify.Controller;
 
-import jakarta.servlet.http.HttpServletRequest;
+
 import jakarta.servlet.http.HttpSession;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import spotify.Dto.AuthenticationRequest;
+import spotify.Dto.PersonDto;
 import spotify.Dto.RegisterRequest;
 import spotify.Service.PersonService;
 import lombok.RequiredArgsConstructor;
@@ -25,20 +23,11 @@ public class PersonController {
     public String register(@RequestBody RegisterRequest registerRequest) {
         return service.Register(registerRequest);
     }
-    @GetMapping("/check-session")
-    public String checkSession(HttpSession session) {
-        String token = (String) session.getAttribute("authToken");
-        if (token == null) {
-            return "No token in session. Please login.";
-        }
 
-        boolean valid = service.validateToken(token);
-        return valid ? "Token is valid." : "Invalid token.";
-    }
 
     @PostMapping("/login")
-    public String login(@RequestBody AuthenticationRequest authenticationRequest , HttpSession session) {
-        return service.login(authenticationRequest , session);
+    public String login(@RequestBody AuthenticationRequest authenticationRequest ) {
+        return service.login(authenticationRequest );
     }
     @PostMapping("/logout")
     public String logout(HttpSession session) {
@@ -47,7 +36,7 @@ public class PersonController {
     }
 
     @GetMapping
-    public List<RegisterRequest> getAll() {
+    public List<PersonDto> getAll() {
         return service.getAll();
     }
 
@@ -59,6 +48,11 @@ public class PersonController {
     @PutMapping("/{id}")
     public String updatedPerson(@PathVariable Long id, RegisterRequest updatePerson) {
         service.updatePerson(id, updatePerson);
+        return "Success updated";
+    }
+    @PutMapping("/role/{id}")
+    public String updatedRole(@PathVariable Long id, @RequestBody PersonDto dto) {
+        service.updateRole(id, dto);
         return "Success updated";
     }
 

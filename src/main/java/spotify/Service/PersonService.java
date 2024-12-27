@@ -2,13 +2,14 @@ package spotify.Service;
 
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import spotify.Dto.AuthenticationRequest;
+import spotify.Dto.PersonDto;
 import spotify.Dto.RegisterRequest;
 import spotify.Entity.Person;
 import spotify.Entity.Role_Person;
+import spotify.Mapper.PersonListMapper;
 import spotify.Mapper.PersonMapper;
 import spotify.Repository.PersonRepository;
 import spotify.Repository.RoleRepository;
@@ -22,6 +23,7 @@ import io.jsonwebtoken.Jwts;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.List;
 
@@ -30,12 +32,13 @@ import java.util.List;
 public class PersonService {
     private final PersonRepository repository;
     private final PersonMapper mapper;
+    private final PersonListMapper listMapper;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     /**
      * Login method to authenticate a user by email and password.
      */
-    public String login(AuthenticationRequest request, HttpSession session) {
+    public String login(AuthenticationRequest request) {
         Person person = repository.findByEmail(request.getEmail());
         if (person == null) {
             throw new UsernameNotFoundException("User with email " + request.getEmail() + " not found");
@@ -51,8 +54,6 @@ public class PersonService {
                 .authorities(person.getRole().getRole())
                 .build();
         String token = generateToken(userDetails);
-        session.setAttribute("authToken", token);
-        session.setMaxInactiveInterval(60 * 60);
 
         return token;
     }
@@ -94,8 +95,8 @@ public class PersonService {
     /**
      * Get all users.
      */
-    public List<RegisterRequest> getAll() {
-        return mapper.toDtoList(repository.findAll());
+    public List<PersonDto> getAll() {
+        return listMapper.toDtoList(repository.findAll());
     }
 
     /**
@@ -132,6 +133,18 @@ public class PersonService {
         return "Update Success";
     }
 
+    public String updateRole(Long id, PersonDto dto) {
+        Person person = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        if (dto.getRole() != null && !dto.getRole().isEmpty()) {
+            Role_Person newRole = roleRepository.findByRole(dto.getRole())
+                    .orElseThrow(() -> new IllegalArgumentException("Role not found: " + dto.getRole()));
+            person.setRole(newRole);
+        }
+        repository.save(person);
+        return "Role updated successfully";
+    }
     /**
      * Delete a user by ID.
      */
