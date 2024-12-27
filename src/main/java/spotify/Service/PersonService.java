@@ -35,7 +35,7 @@ public class PersonService {
     /**
      * Login method to authenticate a user by email and password.
      */
-    public String login(AuthenticationRequest request, HttpSession session) {
+    public String login(AuthenticationRequest request) {
         Person person = repository.findByEmail(request.getEmail());
         if (person == null) {
             throw new UsernameNotFoundException("User with email " + request.getEmail() + " not found");
@@ -51,8 +51,6 @@ public class PersonService {
                 .authorities(person.getRole().getRole())
                 .build();
         String token = generateToken(userDetails);
-        session.setAttribute("authToken", token);
-        session.setMaxInactiveInterval(60 * 60);
 
         return token;
     }

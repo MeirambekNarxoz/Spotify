@@ -2,6 +2,7 @@ package spotify.Controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +38,7 @@ public class AlbumController {
         return "albums/detail"; // путь к вашему шаблону
     }
 
+    @PreAuthorize("hasRole('MODERATOR')")
     @GetMapping("/new")
     public String createAlbumForm(Model model) {
         model.addAttribute("album", new Album());
@@ -46,6 +48,7 @@ public class AlbumController {
 
 
 
+    @PreAuthorize("hasRole('MODERATOR')")
     @PostMapping("/create")
     public String createAlbum(@RequestParam String title,
                               @RequestParam(value = "coverPic") MultipartFile coverImage)
@@ -58,6 +61,7 @@ public class AlbumController {
     }
 
 
+    @PreAuthorize("hasRole('MODERATOR')")
     @GetMapping("/delete/{id}")
     public String deleteAlbum(@PathVariable Long id) {
         albumService.delete(id);

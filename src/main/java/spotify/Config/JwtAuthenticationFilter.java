@@ -23,7 +23,7 @@ import java.util.List;
 @Component
 public class JwtAuthenticationFilter extends org.springframework.web.filter.OncePerRequestFilter {
 
-    private static final SecretKey SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256); 
+    private static final SecretKey SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -46,7 +46,7 @@ public class JwtAuthenticationFilter extends org.springframework.web.filter.Once
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                     UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
                             .username(username)
-                            .password("") // Пароль не нужен для валидации токена
+                            .password("") // No password needed for token validation
                             .authorities(authorities.toArray(String[]::new))
                             .build();
 

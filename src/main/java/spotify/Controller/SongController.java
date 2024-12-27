@@ -4,13 +4,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import spotify.Entity.Album;
 import spotify.Entity.Song;
 import spotify.Service.AlbumService;
 import spotify.Service.SongService;
@@ -49,6 +47,7 @@ public class SongController {
         model.addAttribute("albums", albumService.findAll()); // передаем альбомы для выбора
         return "songs/new"; // путь к вашему шаблону
     }
+
     @PostMapping("/create")
     public String createSong(@Valid @RequestParam("title") String title,
                              @RequestParam("artist") String artist,
@@ -78,6 +77,7 @@ public class SongController {
 
         return "redirect:/songs"; // Перенаправление после успешного сохранения
     }
+
 
 
     @GetMapping("/delete/{id}")
