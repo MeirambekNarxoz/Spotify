@@ -29,6 +29,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/person/login", "/person/register").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/person/**").permitAll()
                         .requestMatchers("/person/**").permitAll()
+                        .anyRequest().permitAll()
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")

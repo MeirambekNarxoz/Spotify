@@ -77,21 +77,6 @@
         <button class="btn btn-custom mb-2" onclick="window.location.href='http://localhost:8080/albums'">View Albums</button>
         <button class="btn btn-custom mb-2" onclick="window.location.href='http://localhost:8080/songs'">Music Library</button>
     </div>
-
-    <!-- Song List Section -->
-    <h2>Список Песен</h2>
-    <table id="songTable">
-        <thead>
-        <tr>
-            <th>Название</th>
-            <th>Исполнитель</th>
-            <th>Аудио</th>
-            <th>Обложка</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody id="songList"></tbody>
-    </table>
 </div>
 
 <script>
@@ -117,39 +102,6 @@
     }
 
     // Fetch and display the music list
-    function loadMusicList() {
-        fetch('http://localhost:8080/songs')
-            .then(response => response.json())
-            .then(songs => {
-                const songListContainer = document.getElementById('songList');
-                songListContainer.innerHTML = ''; // Clear any previous songs
-
-                // Loop through the songs and display them
-                songs.forEach(song => {
-                    const songRow = document.createElement('tr');
-                    songRow.innerHTML = `
-                        <td>${song.title}</td>
-                        <td>${song.artist}</td>
-                        <td>
-                            <audio controls>
-                                <source src="/audio/${song.id}" type="audio/mpeg">
-                                Ваш браузер не поддерживает аудиоплеер.
-                            </audio>
-                        </td>
-                        <td><img src="/cover/${song.id}" alt="Обложка альбома" style="width: 100px; height: auto;" /></td>
-                        <td>
-                            <a href="/songs/${song.id}">Просмотреть</a>
-                            <a href="/songs/delete/${song.id}">Удалить</a>
-                        </td>
-                    `;
-                    songListContainer.appendChild(songRow);
-                });
-            })
-            .catch(error => {
-                console.error('Error fetching songs:', error);
-                document.getElementById('songList').innerHTML = '<tr><td colspan="5">Failed to load songs. Please try again later.</td></tr>';
-            });
-    }
 
     // Call the function to load music list when page loads
     window.onload = loadMusicList;

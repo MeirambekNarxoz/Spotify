@@ -38,7 +38,7 @@ public class AlbumController {
         return "albums/detail"; // путь к вашему шаблону
     }
 
-    @PreAuthorize("hasRole('MODERATOR')")
+
     @GetMapping("/new")
     public String createAlbumForm(Model model) {
         model.addAttribute("album", new Album());

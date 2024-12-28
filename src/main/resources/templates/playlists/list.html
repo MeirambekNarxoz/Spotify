@@ -1,23 +1,88 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Список Плейлистов</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #121212;
+            color: rgba(255, 255, 255, 0.9);
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 900px;
+            margin-top: 50px;
+        }
+        h1 {
+            text-align: center;
+            color: #1DB954;
+        }
+        table {
+            width: 100%;
+            margin-top: 30px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        th {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        td {
+            background-color: #181818;
+        }
+        .btn-custom {
+            background-color: #1DB954;
+            color: white;
+            border: none;
+        }
+        .btn-custom:hover {
+            background-color: #1ed760;
+        }
+        .playlist-actions a {
+            color: #1DB954;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        .playlist-actions a:hover {
+            color: #1ed760;
+        }
+    </style>
 </head>
 <body>
-<h1>Список Плейлистов</h1>
-<a th:href="@{/playlists/new}">Добавить новый плейлист</a>
-<table>
-    <tr>
-        <th>Название</th>
-        <th>Действия</th>
-    </tr>
-    <tr th:each="playlist : ${playlists}">
-        <td th:text="${playlist.name}"></td>
-        <td>
-            <a th:href="@{/playlists/{id}(id=${playlist.id})}">Просмотреть</a>
-            <a th:href="@{/playlists/delete/{id}(id=${playlist.id})}">Удалить</a>
-        </td>
-    </tr>
-</table>
+
+<div class="container">
+    <h1>Список Плейлистов</h1>
+    <div class="text-center mb-4">
+        <a href="/playlists/new" class="btn btn-custom">Добавить новый плейлист</a>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Название</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="playlist : ${playlists}">
+            <td th:text="${playlist.name}"></td>
+            <td class="playlist-actions">
+                <a th:href="@{/playlists/{id}(id=${playlist.id})}" class="btn btn-custom">Просмотреть</a>
+                <a th:href="@{/playlists/delete/{id}(id=${playlist.id})}" class="btn btn-danger">Удалить</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
 </body>
 </html>

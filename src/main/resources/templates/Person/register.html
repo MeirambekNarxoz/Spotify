@@ -28,6 +28,13 @@
       border: 1px solid #444;
       color: white;
     }
+    .login-link a {
+      color: #1DB954;
+      text-decoration: none;
+    }
+    .login-link a:hover {
+      color: #1ed760;
+    }
     .btn-primary {
       background-color: #1DB954;
       border: none;
@@ -45,18 +52,6 @@
       font-size: 10px;
       color: white;
       margin-top: 5px;
-    }
-    .login-link {
-      text-align: center;
-      margin-top: 20px;
-      color: white;
-    }
-    .login-link a {
-      color: #1DB954;
-      text-decoration: none;
-    }
-    .login-link a:hover {
-      color: #1ed760;
     }
   </style>
 </head>
@@ -94,13 +89,12 @@
     </div>
 
     <button type="button" class="btn btn-primary w-100" onclick="registerUser()">Register</button>
+    <div class="login-link">
+      <p>Already have an account? <a href="http://localhost:8080/person/login">Login here</a></p>
+    </div>
   </form>
 
   <p id="responseMessage" class="response-message"></p>
-
-  <div class="login-link">
-    <p>Already have an account? <a href="http://localhost:8080/person/login">Login here</a></p>
-  </div>
 </div>
 
 <!-- Bootstrap JS and dependencies -->
@@ -122,11 +116,15 @@
     }
 
     // Password validation
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
+    const passwordRegex = /^(?=.[a-z])(?=.[A-Z])(?=.*\d).{6,}$/;
     if (!passwordRegex.test(password)) {
       document.getElementById('responseMessage').innerText = 'Password must be at least 6 characters long and contain one lowercase letter, one uppercase letter, and one number.';
       return;
     }
+    window.onload = function() {
+      // Clear localStorage when the page loads
+      localStorage.clear();
+    };
 
     const data = {
       name,
@@ -141,18 +139,20 @@
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     })
-            .then(response => response.json())
-            .then(data => {
-              if (data.token) {
-                // If registration is successful, redirect to login page
-                window.location.href = 'http://localhost:8080/person/login?registered=true';
+            .then(response => {
+              if (response.ok) {
+                window.location.href = 'http://localhost:8080/person/login';
               } else {
-                document.getElementById('responseMessage').innerText = 'Registration failed. Please try again.';
+                return response.text().then(message => {
+                  throw new Error(message);
+                });
               }
             })
+            .then(() => {
+              document.getElementById('responseMessage').innerText = 'Registration successful, redirecting to login...';
+            })
             .catch(error => {
-              console.error('Error:', error);
-              document.getElementById('responseMessage').innerText = 'An error occurred during registration.';
+              document.getElementById('responseMessage').innerText = error.message;
             });
   }
 </script>
