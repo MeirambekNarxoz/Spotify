@@ -1,16 +1,76 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Добавить новый Плейлист</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #121212;
+            color: white;
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            background-color: #1e1e1e;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            text-align: center;
+            color: #1DB954;
+            margin-bottom: 20px;
+        }
+        label {
+            color: #b3b3b3;
+            font-weight: bold;
+        }
+        .form-control {
+            background-color: #333;
+            border: 1px solid #444;
+            color: white;
+        }
+        .btn-primary {
+            background-color: #1DB954;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #1ed760;
+        }
+        .btn-secondary {
+            background-color: #b3b3b3;
+            border: none;
+        }
+        .btn-secondary:hover {
+            background-color: #d3d3d3;
+        }
+        a {
+            color: #1DB954;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #1ed760;
+        }
+    </style>
 </head>
 <body>
-<h1>Добавить новый Плейлист</h1>
-<form th:action="@{/playlists}" th:object="${playlist}" method="post">
-    <label>Название:</label>
-    <input type="text" th:field="*{name}" required/>
-    <br/>
-    <button type="submit">Сохранить</button>
-</form>
-<a href="/playlists">Назад</a>
+<div class="container">
+    <h1>Добавить новый Плейлист</h1>
+    <form th:action="@{/playlists}" th:object="${playlist}" method="post">
+        <div class="form-group">
+            <label for="playlistName">Название:</label>
+            <input type="text" id="playlistName" th:field="*{name}" class="form-control" placeholder="Введите название" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block mt-3">Сохранить</button>
+    </form>
+    <div class="text-center mt-3">
+        <a href="/playlists" class="btn btn-secondary btn-block">Назад</a>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

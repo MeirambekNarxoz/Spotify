@@ -1,40 +1,92 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Детали Альбома</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #121212;
+            color: white;
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        h1 {
+            color: #1DB954;
+        }
+        table {
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        th {
+            background-color: #282828;
+            color: #b3b3b3;
+        }
+        td {
+            color: white;
+        }
+        img {
+            border-radius: 5px;
+        }
+        a {
+            color: #1DB954;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #1ed760;
+        }
+        .btn-back {
+            background-color: #1DB954;
+            border: none;
+            margin-bottom: 20px;
+        }
+        .btn-back:hover {
+            background-color: #1ed760;
+        }
+    </style>
 </head>
 <body>
-<a href="/albums">Назад</a>
-<h1 th:text="${album.title}"></h1>
-<img th:src="@{'data:image/jpeg;base64,' + ${album.coverImage}}" alt="Обложка" />
-
-<table>
-    <tr>
-        <th>Название</th>
-        <th>Исполнитель</th>
-        <th>Аудио</th>
-        <th>Обложка</th>
-    </tr>
-    <tr th:each="song : ${songs}">
-        <td th:text="${song.title}"></td>
-        <td th:text="${song.artist}"></td>
-        <td>
-            <audio controls>
-                <source th:src="@{'/audio/' + ${song.id}}" type="audio/mpeg"> <!-- URL для аудиофайла -->
-                Ваш браузер не поддерживает аудиоплеер.
-            </audio>
-        </td>
-        <td>
-            <img th:src="@{'/cover/' + ${song.id}}" alt="Обложка альбома" style="width: 100px; height: auto;"/>
-        </td>
-        <td>
-            <a th:href="@{/songs/{id}(id=${song.id})}">Просмотреть</a>
-<!--            <a th:href="@{/albums/{albumId}/delete/{songId}(albumId=${album.album_id}, songId=${song.id})}">Удалить</a>-->
-
-        </td>
-    </tr>
-</table>
-
-
+<div class="container">
+    <a href="/albums" class="btn btn-back">Назад</a>
+    <h1 th:text="${album.title}"></h1>
+    <div class="text-center my-4">
+        <img th:src="@{'data:image/jpeg;base64,' + ${album.coverImage}}" alt="Обложка" class="img-fluid" style="max-width: 300px; height: auto;">
+    </div>
+    <table class="table table-dark table-hover">
+        <thead>
+        <tr>
+            <th>Название</th>
+            <th>Исполнитель</th>
+            <th>Аудио</th>
+            <th>Обложка</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="song : ${songs}">
+            <td th:text="${song.title}"></td>
+            <td th:text="${song.artist}"></td>
+            <td>
+                <audio controls>
+                    <source th:src="@{'/audio/' + ${song.id}}" type="audio/mpeg">
+                    Ваш браузер не поддерживает аудиоплеер.
+                </audio>
+            </td>
+            <td>
+                <img th:src="@{'/cover/' + ${song.id}}" alt="Обложка альбома" style="width: 100px; height: auto;"/>
+            </td>
+            <td>
+                <a th:href="@{/songs/{id}(id=${song.id})}">Просмотреть</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

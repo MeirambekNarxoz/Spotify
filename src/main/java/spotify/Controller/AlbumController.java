@@ -48,7 +48,6 @@ public class AlbumController {
 
 
 
-    @PreAuthorize("hasRole('MODERATOR')")
     @PostMapping("/create")
     public String createAlbum(@RequestParam String title,
                               @RequestParam(value = "coverPic") MultipartFile coverImage)
@@ -61,7 +60,6 @@ public class AlbumController {
     }
 
 
-    @PreAuthorize("hasRole('MODERATOR')")
     @GetMapping("/delete/{id}")
     public String deleteAlbum(@PathVariable Long id) {
         albumService.delete(id);
