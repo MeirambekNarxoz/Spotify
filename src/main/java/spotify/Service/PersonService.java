@@ -1,7 +1,11 @@
 package spotify.Service;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import spotify.Dto.AuthenticationRequest;
@@ -19,9 +23,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.GrantedAuthority;
-import io.jsonwebtoken.Jwts;
 
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,9 +40,20 @@ public class PersonService {
     private final PersonListMapper listMapper;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
-    /**
-     * Login method to authenticate a user by email and password.
-     */
+
+    @Value("${jwt.secret-key}")
+    private String secretKeyString;
+
+    private SecretKey secretKey;
+
+    @PostConstruct
+    public void init() {
+        this.secretKey = new SecretKeySpec(
+                secretKeyString.getBytes(StandardCharsets.UTF_8),
+                SignatureAlgorithm.HS256.getJcaName()
+        );
+    }
+//    Login
     public String login(AuthenticationRequest request) {
         Person person = repository.findByEmail(request.getEmail());
         if (person == null) {
@@ -47,37 +63,27 @@ public class PersonService {
             throw new BadCredentialsException("Invalid password for email " + request.getEmail());
         }
 
-        // Создать объект UserDetails
         UserDetails userDetails = User.builder()
                 .username(person.getEmail())
                 .password(person.getPassword())
                 .authorities(person.getRole().getRole())
                 .build();
-        String token = generateToken(userDetails);
 
-        return token;
+        return generateToken(userDetails);
     }
-
-
-
-    private static final SecretKey SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-
+// Generate Token
     private String generateToken(UserDetails userDetails) {
-
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
                 .claim("authorities", userDetails.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.joining(",")))
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 часов
-                .signWith(SECRET_KEY, SignatureAlgorithm.HS256)
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours
+                .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
-
-    /**
-     * Register a new user.
-     */
+//    Register
     public String Register(RegisterRequest request) {
         if (repository.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("User already exists");
@@ -90,26 +96,25 @@ public class PersonService {
         newPerson.setRole(defaultRole);
         newPerson.setPhoneNumber(request.getPhone());
         repository.save(newPerson);
-        return "Register Success";
+
+        UserDetails userDetails = User.builder()
+                .username(newPerson.getEmail())
+                .password(newPerson.getPassword())
+                .authorities(newPerson.getRole().getRole())
+                .build();
+
+        return generateToken(userDetails);
     }
 
-    /**
-     * Get all users.
-     */
     public List<PersonDto> getAll() {
         return listMapper.toDtoList(repository.findAll());
     }
 
-    /**
-     * Get user by ID.
-     */
-    public RegisterRequest getById(Long id) {
+    public RegisterRequest getById(Long id)
+    {
         return mapper.toDto(repository.findById(id).orElse(null));
     }
-
-    /**
-     * Update user details.
-     */
+//    Update User
     public String updatePerson(Long id, RegisterRequest updatedRequest) {
         Person person = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
@@ -129,11 +134,10 @@ public class PersonService {
         if (updatedRequest.getAddress() != null) {
             person.setAddress(updatedRequest.getAddress());
         }
-
         repository.save(person);
         return "Update Success";
     }
-
+//    Update User Role
     public String updateRole(Long id, PersonDto dto) {
         Person person = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
@@ -146,9 +150,7 @@ public class PersonService {
         repository.save(person);
         return "Role updated successfully";
     }
-    /**
-     * Delete a user by ID.
-     */
+//    Delete User by id
     public void deletePerson(Long id) {
         if (!repository.existsById(id)) {
             throw new IllegalArgumentException("User not found");
@@ -156,7 +158,4 @@ public class PersonService {
         repository.deleteById(id);
     }
 
-    public boolean validateToken(String token) {
-        return true;
-    }
 }
